@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QViNT — Weekly Social Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0e0b14; --card:#1a1422; --card2:#221a2e; --line:#322840;
+    --pink:#ff2e88; --pink2:#ff6ab0; --purple:#8b5cf6; --cyan:#22d3ee;
+    --text:#f3eefb; --muted:#9d8fb5; --green:#34d399; --red:#fb7185; --amber:#fbbf24;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,"Segoe UI",Roboto,"Noto Sans Thai",sans-serif;
+    line-height:1.5;padding:28px;max-width:1280px;margin:0 auto;
+    background-image:radial-gradient(circle at 15% 0%,rgba(255,46,136,.12),transparent 40%),radial-gradient(circle at 90% 10%,rgba(139,92,246,.12),transparent 40%);}
+  header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:8px}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(90deg,var(--pink),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);font-size:14px}
+  .badge{background:rgba(255,46,136,.15);color:var(--pink2);border:1px solid rgba(255,46,136,.3);padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600}
+  .section-title{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin:30px 0 14px;font-weight:700}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+  .kpi{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:16px;padding:18px}
+  .kpi .label{color:var(--muted);font-size:12px;font-weight:600}
+  .kpi .val{font-size:26px;font-weight:800;margin-top:6px}
+  .kpi .delta{font-size:12px;margin-top:4px;color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+  .card h3{font-size:15px;margin-bottom:14px;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  .name{font-weight:700}
+  .tag{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600}
+  .hot{background:rgba(255,46,136,.16);color:var(--pink2)}
+  .rise{background:rgba(52,211,153,.14);color:var(--green)}
+  .quiet{background:rgba(251,191,36,.14);color:var(--amber)}
+  .chip{display:inline-block;font-size:11px;color:var(--muted)}
+  .clip{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+  .clip .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .clip .who{font-weight:800}
+  .clip .views{font-size:20px;font-weight:800;color:var(--pink2)}
+  .clip .met{display:flex;gap:16px;margin-top:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+  .clip .met b{color:var(--text)}
+  .clip .desc{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .rec{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .rec:last-child{border-bottom:none}
+  .rec .ic{font-size:18px;flex-shrink:0}
+  .rec .body b{color:var(--pink2)}
+  .rec .body{font-size:13.5px}
+  .note{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);border-radius:12px;padding:14px;font-size:13px;color:var(--muted);margin-top:14px}
+  canvas{max-height:280px}
+  footer{margin-top:28px;color:var(--muted);font-size:12px;text-align:center}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>QViNT · Weekly Social Dashboard</h1>
+    <div class="sub">เช็ค Content & Engagement รายสัปดาห์ · Instagram + TikTok</div>
+  </div>
+  <div style="text-align:right">
+    <div class="badge">รอบเก็บข้อมูล: 30 มิ.ย. 2026</div>
+    <div class="sub" style="margin-top:6px">สถานะ: <b style="color:var(--amber)">Baseline (รอบแรก)</b></div>
+  </div>
+</header>
+
+<div class="section-title">ภาพรวมวง</div>
+<div class="kpis">
+  <div class="kpi"><div class="label">TikTok Followers รวม</div><div class="val">105.1K</div><div class="delta">— baseline · สัปดาห์หน้าโชว์ +/-</div></div>
+  <div class="kpi"><div class="label">IG Followers รวม</div><div class="val">15.8K</div><div class="delta">— baseline</div></div>
+  <div class="kpi"><div class="label">TikTok Likes รวม</div><div class="val">~3.29M</div><div class="delta">— baseline</div></div>
+  <div class="kpi"><div class="label">โพสต์ IG รวม</div><div class="val">446</div><div class="delta">4 บัญชี</div></div>
+  <div class="kpi"><div class="label">มาแรงสุด</div><div class="val" style="color:var(--pink2)">FRESHY</div><div class="delta">นำทุกแพลตฟอร์ม</div></div>
+</div>
+
+<div class="section-title">Followers รายคน</div>
+<div class="grid2">
+  <div class="card">
+    <h3>เปรียบเทียบ Followers (TikTok vs IG)</h3>
+    <canvas id="followChart"></canvas>
+  </div>
+  <div class="card">
+    <h3>ตารางรายคน</h3>
+    <table>
+      <thead><tr><th>สมาชิก</th><th class="num">TikTok</th><th class="num">IG</th><th class="num">โพสต์ IG</th><th>เทรนด์</th></tr></thead>
+      <tbody>
+        <tr><td class="name">FRESHY</td><td class="num">81.2K</td><td class="num">6,974</td><td class="num">171</td><td><span class="tag hot">มาแรง</span></td></tr>
+        <tr><td class="name">HONGYING</td><td class="num">10.9K</td><td class="num">2,885</td><td class="num">118</td><td><span class="tag rise">ดาวรุ่ง</span></td></tr>
+        <tr><td class="name">AMP</td><td class="num">11.1K</td><td class="num">3,470</td><td class="num">101</td><td><span class="tag quiet">คลิปล่าสุดเงียบ</span></td></tr>
+        <tr><td class="name">FIN</td><td class="num">1,944</td><td class="num">2,483</td><td class="num">56</td><td><span class="tag quiet">ฐานเล็ก</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">รอบนี้เป็น <b>baseline</b> ยังไม่มีตัวเลขสัปดาห์ก่อนเทียบ — รอบหน้าช่องนี้จะโชว์ +/- followers และวิวเฉลี่ยอัตโนมัติ</div>
+  </div>
+</div>
+
+<div class="section-title">🏆 คลิป TikTok แมสสุดของแต่ละคน + เหตุผล</div>
+<div class="grid2">
+  <div>
+    <div class="clip">
+      <div class="top"><span class="who">FRESHY</span><span class="views">3.6M views</span></div>
+      <div class="met"><span>❤️ <b>505.4K</b></span><span>💬 <b>849</b></span><span>↗️ <b>21.8K</b></span><span>Like rate <b>~14%</b></span></div>
+      <div class="desc">ลิปซิงค์/แอคติ้งมุกน่ารัก #เม็ดข้าวโพด (เสียง Cyn world) · <b>แมสเพราะ:</b> เกาะ trending sound + เสน่ห์หน้ากล้อง relatable</div>
+    </div>
+    <div class="clip">
+      <div class="top"><span class="who">HONGYING</span><span class="views">1.3M views</span></div>
+      <div class="met"><span>❤️ <b>214.9K</b></span><span>💬 <b>1,122</b></span><span>↗️ <b>18.9K</b></span><span>Like rate <b>~16.5%</b> 🥇</span></div>
+      <div class="desc">เต้นกลุ่ม "เทคเดียวจบ" #songkran2025 #perses_th · <b>แมสเพราะ:</b> จังหวะเทศกาล + เกาะเพลงเทรนด์ + <b>ไวรัลข้ามไปอินโดนีเซีย</b></div>
+    </div>
+  </div>
+  <div>
+    <div class="clip">
+      <div class="top"><span class="who">AMP</span><span class="views">718K views</span></div>
+      <div class="met"><span>❤️ <b>46.3K</b></span><span>💬 <b>108</b></span><span>↗️ <b>2.6K</b></span><span>Like rate <b>~6.4%</b></span></div>
+      <div class="desc">เต้นเพลง "หมอนทอง - PITTA P." #dance · <b>แมสเพราะ:</b> เกาะ dance challenge + QVINT รีโพสต์ดันยอด</div>
+    </div>
+    <div class="clip">
+      <div class="top"><span class="who">FIN</span><span class="views">~82.8K views</span></div>
+      <div class="met"><span>❤️ n/a</span><span>💬 n/a</span><span>↗️ n/a</span><span>ฐาน 1.9K</span></div>
+      <div class="desc">เปอร์โซน่าสายกิน/น่ารัก ("อยากกินเบคอน") · <b>ยังไม่แมส:</b> ยังไม่มีคลิปเกาะเทรนด์เต้น/เพลงไวรัล คลิปล่าสุดอยู่หลักร้อยวิว</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">💡 คำแนะนำ & ข้อสังเกต</div>
+<div class="grid2">
+  <div class="card">
+    <h3>ข้อสังเกตรายคน</h3>
+    <div class="rec"><div class="ic">🔥</div><div class="body"><b>FRESHY</b> — ตัวท็อปของวงขาดทุกแพลตฟอร์ม (TikTok 81K / 2.3M likes) ใช้เป็นหัวหอกดึงทราฟฟิกเข้าวง</div></div>
+    <div class="rec"><div class="ic">🚀</div><div class="body"><b>HONGYING</b> — ดาวรุ่ง engagement สูงสุด (like rate 16.5%) + อัลกอริทึมดันข้ามประเทศ น่าต่อยอดจับกลุ่ม SEA/อินโดฯ</div></div>
+    <div class="rec"><div class="ic">⚠️</div><div class="body"><b>AMP</b> — follower เยอะ (11.1K) แต่คลิปล่าสุดวิวตก (หลักร้อย) ทั้งที่เคยทำ 7 แสน ต้องหาคอนเทนต์กระตุ้นใหม่</div></div>
+    <div class="rec"><div class="ic">🌱</div><div class="body"><b>FIN</b> — เล็กสุดทั้ง 2 แพลตฟอร์ม โพสต์น้อยสุด (56) มีพื้นที่โตเยอะ ควรเพิ่มความถี่ + เกาะเทรนด์</div></div>
+  </div>
+  <div class="card">
+    <h3>สูตรคอนเทนต์ที่ทำให้แมส</h3>
+    <div class="rec"><div class="ic">🎵</div><div class="body">เกาะ <b>trending sound / dance challenge</b> คือตัวจุดไวรัลหลักของทุกคลิปท็อป</div></div>
+    <div class="rec"><div class="ic">🎉</div><div class="body">ปล่อยคลิปตรง <b>จังหวะเทศกาล</b> (สงกรานต์ ฯลฯ) ช่วยดัน reach</div></div>
+    <div class="rec"><div class="ic">👯</div><div class="body"><b>เต้นกลุ่ม + รีโพสต์โดยเพจวง</b> ขยายการมองเห็นได้จริง</div></div>
+    <div class="rec"><div class="ic">🌏</div><div class="body"><b>ไวรัลข้ามประเทศ</b> (อินโดฯ) เป็นโบนัสใหญ่ — ลองใส่แคปชั่น/แฮชแท็กจับกลุ่ม SEA</div></div>
+    <div class="rec"><div class="ic">📅</div><div class="body">ความสม่ำเสมอ: ตั้งเป้าโพสต์ TikTok ขั้นต่ำ/สัปดาห์ต่อคน เพื่อเลี้ยงอัลกอริทึม</div></div>
+  </div>
+</div>
+
+<div class="note">
+  <b>⚙️ วิธีใช้รายสัปดาห์:</b> scheduled task <b>qvint-social-weekly-report</b> จะเก็บตัวเลขใหม่ทุกสัปดาห์ลง <code>history.json</code> แล้วเทียบ +/- ให้อัตโนมัติ ·
+  <b>ข้อจำกัด:</b> ① TikTok ต้อง <b>login ค้าง</b> ในเบราว์เซอร์ ไม่งั้นติด anti-bot · ② <b>ยอดไลก์ IG ต่อโพสต์ดูไม่ได้</b> (ทุกบัญชีซ่อน like count) ต้องเข้าผ่านบัญชีเจ้าของ (IG Insights) หรือ Meta Graph API
+</div>
+
+<footer>QViNT Weekly Social Dashboard · อัปเดตล่าสุด 30 มิ.ย. 2026 · ข้อมูลเก็บผ่านเบราว์เซอร์ (TikTok/Instagram)</footer>
+
+<script>
+const ctx=document.getElementById('followChart');
+new Chart(ctx,{
+  type:'bar',
+  data:{
+    labels:['FRESHY','AMP','HONGYING','FIN'],
+    datasets:[
+      {label:'TikTok',data:[81200,11100,10900,1944],backgroundColor:'#ff2e88',borderRadius:6},
+      {label:'Instagram',data:[6974,3470,2885,2483],backgroundColor:'#8b5cf6',borderRadius:6}
+    ]
+  },
+  options:{
+    responsive:true,
+    scales:{
+      y:{type:'logarithmic',ticks:{color:'#9d8fb5',callback:v=>v>=1000?(v/1000)+'K':v},grid:{color:'#322840'}},
+      x:{ticks:{color:'#f3eefb',font:{weight:'700'}},grid:{display:false}}
+    },
+    plugins:{legend:{labels:{color:'#f3eefb'}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw.toLocaleString()}}}
+  }
+});
+</script>
+</body>
+</html>
