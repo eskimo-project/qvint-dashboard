@@ -3,175 +3,392 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QViNT — Weekly Social Dashboard</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<title>QViNT Social Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-  :root{
-    --bg:#0e0b14; --card:#1a1422; --card2:#221a2e; --line:#322840;
-    --pink:#ff2e88; --pink2:#ff6ab0; --purple:#8b5cf6; --cyan:#22d3ee;
-    --text:#f3eefb; --muted:#9d8fb5; --green:#34d399; --red:#fb7185; --amber:#fbbf24;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Noto Sans Thai', Tahoma, sans-serif;
+    background: linear-gradient(160deg, #0f0817 0%, #1a0f2e 40%, #170a24 100%);
+    color: #f2e9fb;
+    min-height: 100vh;
+    padding: 32px 20px 60px;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--text);font-family:-apple-system,"Segoe UI",Roboto,"Noto Sans Thai",sans-serif;
-    line-height:1.5;padding:28px;max-width:1280px;margin:0 auto;
-    background-image:radial-gradient(circle at 15% 0%,rgba(255,46,136,.12),transparent 40%),radial-gradient(circle at 90% 10%,rgba(139,92,246,.12),transparent 40%);}
-  header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:8px}
-  h1{font-size:30px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(90deg,var(--pink),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .sub{color:var(--muted);font-size:14px}
-  .badge{background:rgba(255,46,136,.15);color:var(--pink2);border:1px solid rgba(255,46,136,.3);padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600}
-  .section-title{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin:30px 0 14px;font-weight:700}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
-  .kpi{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:16px;padding:18px}
-  .kpi .label{color:var(--muted);font-size:12px;font-weight:600}
-  .kpi .val{font-size:26px;font-weight:800;margin-top:6px}
-  .kpi .delta{font-size:12px;margin-top:4px;color:var(--muted)}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
-  .card h3{font-size:15px;margin-bottom:14px;font-weight:700}
-  table{width:100%;border-collapse:collapse;font-size:13.5px}
-  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
-  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
-  td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
-  .name{font-weight:700}
-  .tag{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600}
-  .hot{background:rgba(255,46,136,.16);color:var(--pink2)}
-  .rise{background:rgba(52,211,153,.14);color:var(--green)}
-  .quiet{background:rgba(251,191,36,.14);color:var(--amber)}
-  .chip{display:inline-block;font-size:11px;color:var(--muted)}
-  .clip{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
-  .clip .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-  .clip .who{font-weight:800}
-  .clip .views{font-size:20px;font-weight:800;color:var(--pink2)}
-  .clip .met{display:flex;gap:16px;margin-top:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
-  .clip .met b{color:var(--text)}
-  .clip .desc{font-size:12.5px;color:var(--muted);margin-top:8px}
-  .rec{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
-  .rec:last-child{border-bottom:none}
-  .rec .ic{font-size:18px;flex-shrink:0}
-  .rec .body b{color:var(--pink2)}
-  .rec .body{font-size:13.5px}
-  .note{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);border-radius:12px;padding:14px;font-size:13px;color:var(--muted);margin-top:14px}
-  canvas{max-height:280px}
-  footer{margin-top:28px;color:var(--muted);font-size:12px;text-align:center}
-  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    background: linear-gradient(90deg, #ff6ec7, #b06bff, #6ec7ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 1px;
+  }
+  header p { color: #c9a8e8; margin-top: 8px; font-size: 0.95rem; }
+  .updated-badge {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 16px;
+    background: rgba(176, 107, 255, 0.15);
+    border: 1px solid rgba(176, 107, 255, 0.4);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #e0c3ff;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-bottom: 36px;
+  }
+  .kpi-card {
+    background: linear-gradient(145deg, rgba(255,110,199,0.08), rgba(110,199,255,0.05));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #ff6ec7, #b06bff);
+  }
+  .kpi-card .label { font-size: 0.8rem; color: #c9a8e8; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi-card .value { font-size: 1.8rem; font-weight: 700; margin: 6px 0; color: #fff; }
+  .kpi-card .delta { font-size: 0.85rem; font-weight: 600; }
+  .up { color: #6ee7a0; }
+  .down { color: #ff8a8a; }
+  .flat { color: #c9a8e8; }
+
+  section { margin-bottom: 40px; }
+  h2 {
+    font-size: 1.3rem;
+    color: #ff9edb;
+    margin-bottom: 16px;
+    border-left: 4px solid #b06bff;
+    padding-left: 12px;
+  }
+
+  .chart-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255,255,255,0.03);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  th, td { padding: 14px 16px; text-align: left; font-size: 0.9rem; }
+  th {
+    background: rgba(176,107,255,0.15);
+    color: #e0c3ff;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+  }
+  tbody tr:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.06); }
+  tbody tr:hover { background: rgba(255,110,199,0.05); }
+  .name-cell { font-weight: 700; color: #fff; }
+  .platform-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-right: 6px;
+  }
+  .tag-ig { background: rgba(255,110,199,0.2); color: #ff9edb; }
+  .tag-tt { background: rgba(110,199,255,0.2); color: #9edcff; }
+
+  .clip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+  }
+  .clip-card {
+    background: linear-gradient(145deg, rgba(176,107,255,0.1), rgba(255,110,199,0.05));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px;
+  }
+  .clip-card .who { font-weight: 700; font-size: 1.05rem; color: #fff; margin-bottom: 4px; }
+  .clip-card .views { font-size: 1.6rem; font-weight: 800; color: #ff9edb; margin: 8px 0; }
+  .clip-card .stats { font-size: 0.85rem; color: #c9a8e8; line-height: 1.6; }
+  .badge-star {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 10px;
+    background: rgba(110,231,160,0.15);
+    color: #6ee7a0;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .insight-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .insight-box ul { list-style: none; }
+  .insight-box li {
+    padding: 10px 0 10px 22px;
+    position: relative;
+    font-size: 0.92rem;
+    color: #e6d7f5;
+    line-height: 1.5;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .insight-box li:last-child { border-bottom: none; }
+  .insight-box li::before {
+    content: '✦';
+    position: absolute; left: 0; color: #b06bff;
+  }
+  footer { text-align: center; margin-top: 40px; color: #8a6fa8; font-size: 0.8rem; }
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<header>
-  <div>
-    <h1>QViNT · Weekly Social Dashboard</h1>
-    <div class="sub">เช็ค Content & Engagement รายสัปดาห์ · Instagram + TikTok</div>
-  </div>
-  <div style="text-align:right">
-    <div class="badge">รอบเก็บข้อมูล: 30 มิ.ย. 2026</div>
-    <div class="sub" style="margin-top:6px">สถานะ: <b style="color:var(--amber)">Baseline (รอบแรก)</b></div>
-  </div>
-</header>
+  <header>
+    <h1>QViNT SOCIAL DASHBOARD</h1>
+    <p>Content & Engagement Tracker — Instagram × TikTok</p>
+    <div class="updated-badge">อัปเดตล่าสุด: 6 กรกฎาคม 2569 · เทียบกับ 30 มิถุนายน 2569</div>
+  </header>
 
-<div class="section-title">ภาพรวมวง</div>
-<div class="kpis">
-  <div class="kpi"><div class="label">TikTok Followers รวม</div><div class="val">105.1K</div><div class="delta">— baseline · สัปดาห์หน้าโชว์ +/-</div></div>
-  <div class="kpi"><div class="label">IG Followers รวม</div><div class="val">15.8K</div><div class="delta">— baseline</div></div>
-  <div class="kpi"><div class="label">TikTok Likes รวม</div><div class="val">~3.29M</div><div class="delta">— baseline</div></div>
-  <div class="kpi"><div class="label">โพสต์ IG รวม</div><div class="val">446</div><div class="delta">4 บัญชี</div></div>
-  <div class="kpi"><div class="label">มาแรงสุด</div><div class="val" style="color:var(--pink2)">FRESHY</div><div class="delta">นำทุกแพลตฟอร์ม</div></div>
-</div>
+  <section>
+    <h2>ภาพรวม KPI</h2>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="label">IG Followers รวม</div>
+        <div class="value">15,846</div>
+        <div class="delta up">▲ +34 (+0.2%)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">TikTok Followers รวม</div>
+        <div class="value">105.0K</div>
+        <div class="delta down">▼ -104 (-0.1%)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">TikTok Likes รวม</div>
+        <div class="value">3.09M</div>
+        <div class="delta up">▲ +5.4K (+0.2%)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">คลิปแมสสุดสัปดาห์นี้</div>
+        <div class="value">HONGYING</div>
+        <div class="delta flat">1.3M views · like rate 16.5%</div>
+      </div>
+    </div>
+  </section>
 
-<div class="section-title">Followers รายคน</div>
-<div class="grid2">
-  <div class="card">
-    <h3>เปรียบเทียบ Followers (TikTok vs IG)</h3>
-    <canvas id="followChart"></canvas>
-  </div>
-  <div class="card">
-    <h3>ตารางรายคน</h3>
+  <section>
+    <h2>Instagram Followers เทียบรายคน</h2>
+    <div class="chart-card">
+      <canvas id="igChart" height="90"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>TikTok Followers เทียบรายคน</h2>
+    <div class="chart-card">
+      <canvas id="ttChart" height="90"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>ตารางรายละเอียดรายคน</h2>
     <table>
-      <thead><tr><th>สมาชิก</th><th class="num">TikTok</th><th class="num">IG</th><th class="num">โพสต์ IG</th><th>เทรนด์</th></tr></thead>
+      <thead>
+        <tr><th>สมาชิก</th><th>แพลตฟอร์ม</th><th>Followers</th><th>+/- สัปดาห์นี้</th><th>โพสต์/Likes</th><th>เทรนด์</th></tr>
+      </thead>
       <tbody>
-        <tr><td class="name">FRESHY</td><td class="num">81.2K</td><td class="num">6,974</td><td class="num">171</td><td><span class="tag hot">มาแรง</span></td></tr>
-        <tr><td class="name">HONGYING</td><td class="num">10.9K</td><td class="num">2,885</td><td class="num">118</td><td><span class="tag rise">ดาวรุ่ง</span></td></tr>
-        <tr><td class="name">AMP</td><td class="num">11.1K</td><td class="num">3,470</td><td class="num">101</td><td><span class="tag quiet">คลิปล่าสุดเงียบ</span></td></tr>
-        <tr><td class="name">FIN</td><td class="num">1,944</td><td class="num">2,483</td><td class="num">56</td><td><span class="tag quiet">ฐานเล็ก</span></td></tr>
+        <tr>
+          <td class="name-cell">FRESHY</td>
+          <td><span class="platform-tag tag-ig">IG</span></td>
+          <td>6,989</td>
+          <td class="up">▲ +15</td>
+          <td>171 โพสต์ (+0)</td>
+          <td class="flat">ทรงตัว</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><span class="platform-tag tag-tt">TikTok</span></td>
+          <td>81.1K</td>
+          <td class="down">▼ -100</td>
+          <td>2.3M likes (+0)</td>
+          <td class="flat">ทรงตัว</td>
+        </tr>
+        <tr>
+          <td class="name-cell">AMP</td>
+          <td><span class="platform-tag tag-ig">IG</span></td>
+          <td>3,488</td>
+          <td class="up">▲ +18</td>
+          <td>102 โพสต์ (+1)</td>
+          <td class="up">ขึ้น</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><span class="platform-tag tag-tt">TikTok</span></td>
+          <td>11.1K</td>
+          <td class="flat">ทรงตัว</td>
+          <td>426.7K likes (+4.8K)</td>
+          <td class="up">ขึ้น</td>
+        </tr>
+        <tr>
+          <td class="name-cell">FIN</td>
+          <td><span class="platform-tag tag-ig">IG</span></td>
+          <td>2,479</td>
+          <td class="down">▼ -4</td>
+          <td>56 โพสต์ (+0)</td>
+          <td class="down">แผ่วลง</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><span class="platform-tag tag-tt">TikTok</span></td>
+          <td>1,940</td>
+          <td class="down">▼ -4</td>
+          <td>26.2K likes (+0.2K)</td>
+          <td class="flat">ทรงตัว</td>
+        </tr>
+        <tr>
+          <td class="name-cell">HONGYING</td>
+          <td><span class="platform-tag tag-ig">IG</span></td>
+          <td>2,890</td>
+          <td class="up">▲ +5</td>
+          <td>119 โพสต์ (+1)</td>
+          <td class="up">ขึ้น</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><span class="platform-tag tag-tt">TikTok</span></td>
+          <td>10.9K</td>
+          <td class="flat">ทรงตัว</td>
+          <td>539.5K likes (+0.4K)</td>
+          <td class="flat">ทรงตัว (engagement สูงสุด)</td>
+        </tr>
       </tbody>
     </table>
-    <div class="note">รอบนี้เป็น <b>baseline</b> ยังไม่มีตัวเลขสัปดาห์ก่อนเทียบ — รอบหน้าช่องนี้จะโชว์ +/- followers และวิวเฉลี่ยอัตโนมัติ</div>
-  </div>
-</div>
+  </section>
 
-<div class="section-title">🏆 คลิป TikTok แมสสุดของแต่ละคน + เหตุผล</div>
-<div class="grid2">
-  <div>
-    <div class="clip">
-      <div class="top"><span class="who">FRESHY</span><span class="views">3.6M views</span></div>
-      <div class="met"><span>❤️ <b>505.4K</b></span><span>💬 <b>849</b></span><span>↗️ <b>21.8K</b></span><span>Like rate <b>~14%</b></span></div>
-      <div class="desc">ลิปซิงค์/แอคติ้งมุกน่ารัก #เม็ดข้าวโพด (เสียง Cyn world) · <b>แมสเพราะ:</b> เกาะ trending sound + เสน่ห์หน้ากล้อง relatable</div>
+  <section>
+    <h2>คลิปแมสสุด TikTok — รายคน</h2>
+    <div class="clip-grid">
+      <div class="clip-card">
+        <div class="who">FRESHY</div>
+        <div class="views">3.6M views</div>
+        <div class="stats">❤️ 505.4K likes · 💬 848 comments · 🔁 21.8K shares</div>
+        <span class="badge-star">คลิปเดิม ยังไม่มีคลิปใหม่แซง</span>
+      </div>
+      <div class="clip-card">
+        <div class="who">AMP</div>
+        <div class="views">718.3K views</div>
+        <div class="stats">❤️ 46.3K likes · 💬 108 comments · 🔁 2.6K shares</div>
+        <span class="badge-star">เพลงหมอนทอง ยังฮิตต่อเนื่อง</span>
+      </div>
+      <div class="clip-card">
+        <div class="who">FIN</div>
+        <div class="views">82.8K views</div>
+        <div class="stats">❤️ 8.4K likes · 💬 92 comments · 🔁 432 shares</div>
+        <span class="badge-star">คลิป GOT7 dance ร่วมกับ FRESHY+HONGYING</span>
+      </div>
+      <div class="clip-card">
+        <div class="who">HONGYING</div>
+        <div class="views">1.3M views</div>
+        <div class="stats">❤️ 214.9K likes · 💬 1,121 comments · 🔁 18.9K shares</div>
+        <span class="badge-star">Like rate 16.5% สูงสุดในวง · ไวรัลอินโดฯ</span>
+      </div>
     </div>
-    <div class="clip">
-      <div class="top"><span class="who">HONGYING</span><span class="views">1.3M views</span></div>
-      <div class="met"><span>❤️ <b>214.9K</b></span><span>💬 <b>1,122</b></span><span>↗️ <b>18.9K</b></span><span>Like rate <b>~16.5%</b> 🥇</span></div>
-      <div class="desc">เต้นกลุ่ม "เทคเดียวจบ" #songkran2025 #perses_th · <b>แมสเพราะ:</b> จังหวะเทศกาล + เกาะเพลงเทรนด์ + <b>ไวรัลข้ามไปอินโดนีเซีย</b></div>
-    </div>
-  </div>
-  <div>
-    <div class="clip">
-      <div class="top"><span class="who">AMP</span><span class="views">718K views</span></div>
-      <div class="met"><span>❤️ <b>46.3K</b></span><span>💬 <b>108</b></span><span>↗️ <b>2.6K</b></span><span>Like rate <b>~6.4%</b></span></div>
-      <div class="desc">เต้นเพลง "หมอนทอง - PITTA P." #dance · <b>แมสเพราะ:</b> เกาะ dance challenge + QVINT รีโพสต์ดันยอด</div>
-    </div>
-    <div class="clip">
-      <div class="top"><span class="who">FIN</span><span class="views">~82.8K views</span></div>
-      <div class="met"><span>❤️ n/a</span><span>💬 n/a</span><span>↗️ n/a</span><span>ฐาน 1.9K</span></div>
-      <div class="desc">เปอร์โซน่าสายกิน/น่ารัก ("อยากกินเบคอน") · <b>ยังไม่แมส:</b> ยังไม่มีคลิปเกาะเทรนด์เต้น/เพลงไวรัล คลิปล่าสุดอยู่หลักร้อยวิว</div>
-    </div>
-  </div>
-</div>
+  </section>
 
-<div class="section-title">💡 คำแนะนำ & ข้อสังเกต</div>
-<div class="grid2">
-  <div class="card">
-    <h3>ข้อสังเกตรายคน</h3>
-    <div class="rec"><div class="ic">🔥</div><div class="body"><b>FRESHY</b> — ตัวท็อปของวงขาดทุกแพลตฟอร์ม (TikTok 81K / 2.3M likes) ใช้เป็นหัวหอกดึงทราฟฟิกเข้าวง</div></div>
-    <div class="rec"><div class="ic">🚀</div><div class="body"><b>HONGYING</b> — ดาวรุ่ง engagement สูงสุด (like rate 16.5%) + อัลกอริทึมดันข้ามประเทศ น่าต่อยอดจับกลุ่ม SEA/อินโดฯ</div></div>
-    <div class="rec"><div class="ic">⚠️</div><div class="body"><b>AMP</b> — follower เยอะ (11.1K) แต่คลิปล่าสุดวิวตก (หลักร้อย) ทั้งที่เคยทำ 7 แสน ต้องหาคอนเทนต์กระตุ้นใหม่</div></div>
-    <div class="rec"><div class="ic">🌱</div><div class="body"><b>FIN</b> — เล็กสุดทั้ง 2 แพลตฟอร์ม โพสต์น้อยสุด (56) มีพื้นที่โตเยอะ ควรเพิ่มความถี่ + เกาะเทรนด์</div></div>
-  </div>
-  <div class="card">
-    <h3>สูตรคอนเทนต์ที่ทำให้แมส</h3>
-    <div class="rec"><div class="ic">🎵</div><div class="body">เกาะ <b>trending sound / dance challenge</b> คือตัวจุดไวรัลหลักของทุกคลิปท็อป</div></div>
-    <div class="rec"><div class="ic">🎉</div><div class="body">ปล่อยคลิปตรง <b>จังหวะเทศกาล</b> (สงกรานต์ ฯลฯ) ช่วยดัน reach</div></div>
-    <div class="rec"><div class="ic">👯</div><div class="body"><b>เต้นกลุ่ม + รีโพสต์โดยเพจวง</b> ขยายการมองเห็นได้จริง</div></div>
-    <div class="rec"><div class="ic">🌏</div><div class="body"><b>ไวรัลข้ามประเทศ</b> (อินโดฯ) เป็นโบนัสใหญ่ — ลองใส่แคปชั่น/แฮชแท็กจับกลุ่ม SEA</div></div>
-    <div class="rec"><div class="ic">📅</div><div class="body">ความสม่ำเสมอ: ตั้งเป้าโพสต์ TikTok ขั้นต่ำ/สัปดาห์ต่อคน เพื่อเลี้ยงอัลกอริทึม</div></div>
-  </div>
-</div>
+  <section>
+    <h2>ข้อสังเกต & คำแนะนำ</h2>
+    <div class="insight-box">
+      <ul>
+        <li><strong>FRESHY</strong> ยังนำทุกแพลตฟอร์มด้วยฐาน follower ใหญ่สุด แต่สัปดาห์นี้ตัวเลขเกือบทรงตัว (TikTok followers ลดเล็กน้อย -100) และคลิปแมสยังเป็นคลิปเดิม (3.6M) — ควรดันคอนเทนต์ใหม่เพื่อรักษาโมเมนตัม</li>
+        <li><strong>AMP</strong> มาแรงสุดในรอบนี้ ทั้ง IG followers (+18) และ TikTok likes (+4.8K) โตต่อเนื่อง ควรใช้จังหวะนี้ปล่อยคอนเทนต์เพิ่มความถี่</li>
+        <li><strong>FIN</strong> ตัวเลข followers แผ่วลงเล็กน้อยทั้งสองแพลตฟอร์ม (-4/-4) แต่มีจุดบวก: คลิป GOT7 dance ร่วมกับ FRESHY และ HONGYING ได้ engagement ดี (8.4K likes) — ควรทำคลิปกลุ่มแบบนี้ต่อเพื่อดึง reach จากแฟนคลับสมาชิกคนอื่น</li>
+        <li><strong>HONGYING</strong> ยังครองแชมป์ engagement สูงสุดในวง (like rate 16.5%) ฐาน follower โตสม่ำเสมอ (+5 IG, +1 โพสต์) เป็นตัวอย่างที่ดีให้คนอื่นทำตามในแง่คุณภาพคอนเทนต์</li>
+        <li><strong>ภาพรวมวง:</strong> สัปดาห์นี้ไม่มีคลิปไวรัลใหม่ ทุกคลิปแมสสุดยังเป็นคลิปเดิมจากรอบก่อน — แนะนำให้วางแผนคอนเทนต์ trend/challenge ใหม่ในสัปดาห์หน้าเพื่อสร้างจุดพีคใหม่ โดยเฉพาะ AMP และ FIN ที่ follower เยอะ/มีศักยภาพแต่ยังไม่มีคลิประเบิด</li>
+      </ul>
+    </div>
+  </section>
 
-<div class="note">
-  <b>⚙️ วิธีใช้รายสัปดาห์:</b> scheduled task <b>qvint-social-weekly-report</b> จะเก็บตัวเลขใหม่ทุกสัปดาห์ลง <code>history.json</code> แล้วเทียบ +/- ให้อัตโนมัติ ·
-  <b>ข้อจำกัด:</b> ① TikTok ต้อง <b>login ค้าง</b> ในเบราว์เซอร์ ไม่งั้นติด anti-bot · ② <b>ยอดไลก์ IG ต่อโพสต์ดูไม่ได้</b> (ทุกบัญชีซ่อน like count) ต้องเข้าผ่านบัญชีเจ้าของ (IG Insights) หรือ Meta Graph API
+  <footer>QViNT Social Dashboard · Auto-generated weekly report · ข้อมูล ณ วันที่ 6 กรกฎาคม 2569</footer>
 </div>
-
-<footer>QViNT Weekly Social Dashboard · อัปเดตล่าสุด 30 มิ.ย. 2026 · ข้อมูลเก็บผ่านเบราว์เซอร์ (TikTok/Instagram)<br>✓ ระบบอัปเดตอัตโนมัติทุกวันจันทร์ 9 โมงเช้า · ทดสอบรันสำเร็จ 30 มิ.ย. 2026</footer>
 
 <script>
-const ctx=document.getElementById('followChart');
-new Chart(ctx,{
-  type:'bar',
-  data:{
-    labels:['FRESHY','AMP','HONGYING','FIN'],
-    datasets:[
-      {label:'TikTok',data:[81200,11100,10900,1944],backgroundColor:'#ff2e88',borderRadius:6},
-      {label:'Instagram',data:[6974,3470,2885,2483],backgroundColor:'#8b5cf6',borderRadius:6}
+const igCtx = document.getElementById('igChart').getContext('2d');
+new Chart(igCtx, {
+  type: 'bar',
+  data: {
+    labels: ['FRESHY', 'AMP', 'FIN', 'HONGYING'],
+    datasets: [
+      {
+        label: 'สัปดาห์ก่อน (30 มิ.ย.)',
+        data: [6974, 3470, 2483, 2885],
+        backgroundColor: 'rgba(176,107,255,0.35)',
+        borderRadius: 6
+      },
+      {
+        label: 'สัปดาห์นี้ (6 ก.ค.)',
+        data: [6989, 3488, 2479, 2890],
+        backgroundColor: 'rgba(255,110,199,0.8)',
+        borderRadius: 6
+      }
     ]
   },
-  options:{
-    responsive:true,
-    scales:{
-      y:{type:'logarithmic',ticks:{color:'#9d8fb5',callback:v=>v>=1000?(v/1000)+'K':v},grid:{color:'#322840'}},
-      x:{ticks:{color:'#f3eefb',font:{weight:'700'}},grid:{display:false}}
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#e6d7f5' } }
     },
-    plugins:{legend:{labels:{color:'#f3eefb'}},
-      tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw.toLocaleString()}}}
+    scales: {
+      x: { ticks: { color: '#c9a8e8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { ticks: { color: '#c9a8e8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+    }
+  }
+});
+
+const ttCtx = document.getElementById('ttChart').getContext('2d');
+new Chart(ttCtx, {
+  type: 'bar',
+  data: {
+    labels: ['FRESHY', 'AMP', 'FIN', 'HONGYING'],
+    datasets: [
+      {
+        label: 'สัปดาห์ก่อน (30 มิ.ย.)',
+        data: [81200, 11100, 1944, 10900],
+        backgroundColor: 'rgba(110,199,255,0.35)',
+        borderRadius: 6
+      },
+      {
+        label: 'สัปดาห์นี้ (6 ก.ค.)',
+        data: [81100, 11100, 1940, 10900],
+        backgroundColor: 'rgba(255,110,199,0.8)',
+        borderRadius: 6
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#e6d7f5' } }
+    },
+    scales: {
+      x: { ticks: { color: '#c9a8e8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { ticks: { color: '#c9a8e8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+    }
   }
 });
 </script>
