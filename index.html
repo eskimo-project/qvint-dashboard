@@ -6,115 +6,110 @@
 <title>QViNT Social Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-  :root{
-    --bg:#0d0714; --card:#1a1025; --card2:#211433;
-    --pink:#ff4d9d; --purple:#a855f7; --text:#f3e8ff; --muted:#9d8bb5;
-    --up:#4ade80; --down:#f87171; --flat:#facc15;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI','Noto Sans Thai',sans-serif}
-  body{background:var(--bg);color:var(--text);padding:24px;max-width:1200px;margin:0 auto}
-  header{text-align:center;margin-bottom:28px}
-  h1{font-size:2.2rem;background:linear-gradient(90deg,var(--pink),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
-  .sub{color:var(--muted);margin-top:6px;font-size:.95rem}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:28px}
-  .kpi{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid #2d1b45;border-radius:16px;padding:18px}
-  .kpi .label{color:var(--muted);font-size:.85rem}
-  .kpi .value{font-size:1.9rem;font-weight:800;margin-top:4px}
-  .kpi .delta{font-size:.85rem;margin-top:4px}
-  .up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--flat)}
-  .section{background:var(--card);border:1px solid #2d1b45;border-radius:16px;padding:22px;margin-bottom:24px}
-  h2{font-size:1.2rem;margin-bottom:16px;color:var(--pink)}
-  table{width:100%;border-collapse:collapse;font-size:.92rem}
-  th,td{padding:10px 8px;text-align:right;border-bottom:1px solid #2d1b45}
-  th:first-child,td:first-child{text-align:left}
-  th{color:var(--muted);font-weight:600;font-size:.82rem}
-  .name{font-weight:700;color:var(--text)}
-  .handle{color:var(--muted);font-size:.78rem}
-  .clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-  .clip{background:var(--card2);border-radius:14px;padding:16px;border:1px solid #3b2260}
-  .clip .who{font-weight:800;color:var(--purple)}
-  .clip .views{font-size:1.6rem;font-weight:800;color:var(--pink);margin:6px 0}
-  .clip .meta{color:var(--muted);font-size:.85rem;line-height:1.5}
-  .notes li{margin:8px 0 8px 18px;color:var(--text);line-height:1.55}
-  .notes b{color:var(--pink)}
-  .chartbox{position:relative;height:320px}
-  footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:20px}
-  .badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.72rem;background:#3b2260;color:#d8b4fe;margin-left:6px}
+:root{
+--bg:#0d0b14; --card:#181322; --card2:#1f1830;
+--pink:#ff5fa2; --purple:#a06bff; --text:#f2eefb; --muted:#9b8fb5;
+--green:#3ddc97; --red:#ff6b6b;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI','Noto Sans Thai',sans-serif}
+body{background:var(--bg);color:var(--text);padding:24px;max-width:1200px;margin:0 auto}
+h1{font-size:1.8rem;background:linear-gradient(90deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:var(--muted);margin:6px 0 24px;font-size:.9rem}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:28px}
+.kpi{background:var(--card);border:1px solid #2a2140;border-radius:14px;padding:18px}
+.kpi .label{color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
+.kpi .value{font-size:1.7rem;font-weight:700;margin-top:6px}
+.kpi .delta{font-size:.85rem;margin-top:4px}
+.up{color:var(--green)} .down{color:var(--red)} .flat{color:var(--muted)}
+section{margin-bottom:32px}
+h2{font-size:1.15rem;margin-bottom:14px;color:var(--pink)}
+.chart-card{background:var(--card);border:1px solid #2a2140;border-radius:14px;padding:20px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden}
+th,td{padding:12px 14px;text-align:right;font-size:.9rem}
+th{background:var(--card2);color:var(--muted);font-weight:600}
+th:first-child,td:first-child{text-align:left}
+tr{border-bottom:1px solid #241c38}
+.clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.clip{background:linear-gradient(145deg,var(--card),var(--card2));border:1px solid #2a2140;border-radius:14px;padding:16px}
+.clip .who{font-weight:700;color:var(--purple)}
+.clip .views{font-size:1.5rem;font-weight:700;margin:6px 0}
+.clip .meta{color:var(--muted);font-size:.85rem;line-height:1.6}
+.notes{background:var(--card);border-left:4px solid var(--pink);border-radius:10px;padding:18px;line-height:1.8;font-size:.92rem}
+.notes li{margin-left:18px;margin-bottom:6px}
+.badge{display:inline-block;background:#2a2140;border-radius:20px;padding:2px 10px;font-size:.75rem;color:var(--muted);margin-left:8px}
+.foot{color:var(--muted);font-size:.78rem;margin-top:8px}
 </style>
 </head>
 <body>
-<header>
-  <h1>QViNT Social Dashboard</h1>
-  <div class="sub">อัปเดตล่าสุด: 19 ก.ค. 2026 · เทียบกับรอบ 30 มิ.ย. 2026 · IG + TikTok (4 เมมเบอร์)</div>
-</header>
+<h1>QViNT Social Dashboard</h1>
+<p class="sub">อัปเดตล่าสุด: 19 ก.ค. 2026 · เทียบกับ 13 ก.ค. 2026 · IG ทุกบัญชีซ่อน like count จึงรายงานเฉพาะ followers/โพสต์</p>
 
 <div class="kpis">
-  <div class="kpi"><div class="label">IG Followers รวม</div><div class="value">15,889</div><div class="delta up">▲ +77 จากรอบก่อน (15,812)</div></div>
-  <div class="kpi"><div class="label">TikTok Followers รวม</div><div class="value">~105.0K</div><div class="delta up">▲ +59 (FIN โตชัดสุด, ที่เหลือเลขปัดคงที่)</div></div>
-  <div class="kpi"><div class="label">TikTok Likes รวม</div><div class="value">~3.39M</div><div class="delta up">▲ ~+107K (FRESHY +~100K, AMP +5.8K)</div></div>
-  <div class="kpi"><div class="label">IG โพสต์ใหม่รอบนี้</div><div class="value">5</div><div class="delta flat">AMP +3 · FIN +1 · HONGYING +1 · FRESHY 0</div></div>
+<div class="kpi"><div class="label">IG Followers รวม</div><div class="value">15,889</div><div class="delta up">▲ +31 จากสัปดาห์ก่อน</div></div>
+<div class="kpi"><div class="label">TikTok Followers รวม</div><div class="value">105.0K</div><div class="delta down">▼ −109 (FRESHY −100, FIN −9)</div></div>
+<div class="kpi"><div class="label">TikTok Likes รวม</div><div class="value">3.39M</div><div class="delta up">▲ +0.8K จริง (+100K เป็นเลขปัด FRESHY)</div></div>
+<div class="kpi"><div class="label">โพสต์ IG ใหม่รอบนี้</div><div class="value">0</div><div class="delta down">ทั้งวงไม่มีโพสต์ใหม่เลยใน 7 วัน</div></div>
 </div>
 
-<div class="section">
-  <h2>📊 Followers เทียบรายคน</h2>
-  <div class="chartbox"><canvas id="chart"></canvas></div>
-</div>
+<section>
+<h2>Followers เทียบรายคน</h2>
+<div class="chart-card"><canvas id="chart" height="110"></canvas></div>
+</section>
 
-<div class="section">
-  <h2>📋 ตารางรายคน (19 ก.ค. 2026 vs 30 มิ.ย. 2026)</h2>
-  <table>
-    <thead><tr><th>เมมเบอร์</th><th>IG Followers</th><th>Δ IG</th><th>IG Posts</th><th>TT Followers</th><th>Δ TT</th><th>TT Likes</th><th>Δ Likes</th></tr></thead>
-    <tbody>
-      <tr><td><span class="name">FRESHY</span><br><span class="handle">@freshyniracha</span></td><td>6,989</td><td class="up">+15</td><td>171 (+0)</td><td>81K</td><td class="flat">~คงที่*</td><td>2.4M</td><td class="up">+~100K*</td></tr>
-      <tr><td><span class="name">AMP</span><br><span class="handle">IG @imdwvamp · TT @smilingamp</span></td><td>3,517</td><td class="up">+47</td><td>104 (+3)</td><td>11.1K</td><td class="flat">คงที่</td><td>427.7K</td><td class="up">+5.8K</td></tr>
-      <tr><td><span class="name">FIN</span><br><span class="handle">IG @1005cm.___finn · TT @fin1005centimeterstall</span></td><td>2,488</td><td class="up">+5</td><td>57 (+1)</td><td>2,003</td><td class="up">+59</td><td>26.5K</td><td class="up">+0.5K</td></tr>
-      <tr><td><span class="name">HONGYING</span><br><span class="handle">@hongyngllee</span></td><td>2,895</td><td class="up">+10</td><td>119 (+1)</td><td>10.9K</td><td class="flat">คงที่</td><td>540.1K</td><td class="up">+1.0K</td></tr>
-    </tbody>
-  </table>
-  <p style="color:var(--muted);font-size:.78rem;margin-top:10px">* TikTok แสดงเลขปัด (81K/2.4M) — เทียบ baseline 81.2K/2.3M จึงระบุแน่นอนไม่ได้ · ทุกบัญชี IG ซ่อน like count จึงวัด engagement ต่อโพสต์ไม่ได้ · โบนัส: @qvint.official TT 8,328 followers / 398.6K likes</p>
-</div>
+<section>
+<h2>ตารางรายคน (19 ก.ค. 2026 vs 13 ก.ค. 2026)</h2>
+<table>
+<tr><th>สมาชิก</th><th>IG Followers</th><th>Δ IG</th><th>IG Posts</th><th>Δ Posts</th><th>TT Followers</th><th>Δ TT</th><th>TT Likes</th><th>Δ Likes</th></tr>
+<tr><td>🍿 FRESHY</td><td>6,989</td><td class="up">+14</td><td>171</td><td class="flat">0</td><td>81K</td><td class="down">−100</td><td>2.4M</td><td class="flat">≈0 (เลขปัด)*</td></tr>
+<tr><td>🍓 AMP</td><td>3,517</td><td class="up">+19</td><td>104</td><td class="flat">0</td><td>11.1K</td><td class="flat">0</td><td>427.7K</td><td class="up">+0.4K</td></tr>
+<tr><td>🦋 FIN</td><td>2,488</td><td class="down">−1</td><td>57</td><td class="flat">0</td><td>2,003</td><td class="down">−9</td><td>26.5K</td><td class="up">+0.2K</td></tr>
+<tr><td>🦢 HONGYING</td><td>2,895</td><td class="down">−1</td><td>119</td><td class="flat">0</td><td>10.9K</td><td class="flat">0</td><td>540.1K</td><td class="up">+0.2K</td></tr>
+</table>
+<p class="foot">* TikTok แสดงเลขปัด — FRESHY ข้ามขั้นจาก 2.3M เป็น 2.4M เพราะการปัดเลข ยอดจริงน่าจะขยับเล็กน้อย · โบนัส: @qvint.official TT 8,328 followers / 398.6K likes</p>
+</section>
 
-<div class="section">
-  <h2>🔥 คลิป TikTok แมสสุดต่อคน</h2>
-  <div class="clips">
-    <div class="clip"><div class="who">FRESHY <span class="badge">pinned เดิม</span></div><div class="views">3.6M views</div><div class="meta">"แกก็ยอมหน่อยก็ได้บางที"<br>❤️ 505.4K · 💬 848 · ↗️ 21.8K<br>ยอดนิ่งแล้ว (คลิปปี 2024)</div></div>
-    <div class="clip"><div class="who">HONGYING <span class="badge">ไวรัลอินโดฯ</span></div><div class="views">1.3M views</div><div class="meta">เทคเดียวจบ perses (songkran2025)<br>❤️ 215K · 💬 1,120 · 🔖 18.9K<br>like rate ~16.5% สูงสุดในวง</div></div>
-    <div class="clip"><div class="who">AMP <span class="badge">หมอนทอง</span></div><div class="views">718.7K views</div><div class="meta">Dance หมอนทอง - PITTA P.<br>❤️ 46.3K · 💬 108 · ↗️ 2,615<br>คลิปใหม่ๆ วิวหลักร้อย-พัน</div></div>
-    <div class="clip"><div class="who">FIN <span class="badge">โตขึ้น</span></div><div class="views">82.9K views</div><div class="meta">มากะสาว AAA เต้น "A" - GOT7<br>❤️ 8,420 · 💬 94 · 🔖 433<br>like rate ~10% ดีมากสำหรับสเกลนี้</div></div>
-  </div>
+<section>
+<h2>คลิป TikTok แมสสุดของแต่ละคน</h2>
+<div class="clips">
+<div class="clip"><div class="who">FRESHY <span class="badge">คลิปไวรัลเดิม</span></div><div class="views">3.6M views</div><div class="meta">❤️ 505.4K · 💬 848 · ↗️ 21.8K<br>คลิปเดิม มี.ค. 2024 — คลิปใหม่รอบนี้วิวยังต่ำ (600–3.4K)</div></div>
+<div class="clip"><div class="who">HONGYING <span class="badge">engagement แชมป์</span></div><div class="views">1.3M views</div><div class="meta">❤️ 215K · 💬 1,120 · 🔖 18.9K<br>like rate ~16.5% สูงสุดในวง (คลิป perses สงกรานต์)</div></div>
+<div class="clip"><div class="who">AMP <span class="badge">หมอนทอง</span></div><div class="views">718.7K views</div><div class="meta">❤️ 46.3K · 💬 108 · ↗️ 2,615<br>ยอดวิวไต่ขึ้นช้าๆ (+0.1K จากสัปดาห์ก่อน)</div></div>
+<div class="clip"><div class="who">FIN <span class="badge">ยอดนิ่ง</span></div><div class="views">82.9K views</div><div class="meta">❤️ 8,420 · 💬 94 · 🔖 433<br>คลิปเต้น "A" GOT7 ร่วมเมมเบอร์ — like rate ~10%</div></div>
 </div>
+</section>
 
-<div class="section">
-  <h2>💡 ข้อสังเกต & คำแนะนำ (19 ก.ค.)</h2>
-  <ul class="notes">
-    <li><b>AMP มาแรงสุดบน IG รอบนี้</b> (+47 followers, +3 โพสต์) — โมเมนตัมดี ควรโพสต์ต่อเนื่อง แต่ TikTok คลิปใหม่ยังเงียบ (วิวหลักร้อย-พัน) ลองเกาะเทรนด์เสียงฮิตแบบตอนหมอนทองอีก</li>
-    <li><b>FIN โตชัดบน TikTok</b> (+59 followers ~3%) — คลิปเต้น AAA (82.9K) พิสูจน์ว่าแนวเต้น+collab กับเมมเบอร์ดัง (มี little corn ร่วม) เวิร์คจริง ทำซ้ำสูตรนี้</li>
-    <li><b>FRESHY เงียบผิดปกติ</b> — IG ไม่มีโพสต์ใหม่เลยทั้งรอบ (171 เท่าเดิม) และ TikTok คลิปล่าสุดวิวตก (หลักร้อย-พัน) ฐานแฟนใหญ่สุดแต่ต้องเลี้ยงกระแส อย่าปล่อยว่างนาน</li>
-    <li><b>HONGYING ทรงตัว</b> — ไม่มีคลิปไวรัลใหม่ตั้งแต่ perses แต่ engagement ฐานยังแน่น ลองต่อยอดฐานแฟนอินโดฯ ด้วยคอนเทนต์ interact/caption อังกฤษ-อินโดฯ</li>
-    <li><b>ภาพรวมวง:</b> โตช้าแบบ organic ทุกช่อง ไม่มีไวรัลใหม่ในรอบ 3 สัปดาห์ — ควรวางแผนคอนเทนต์ collab 4 คนเกาะเทรนด์เพลงไทยฮิต เพราะคลิปกลุ่ม (AAA, perses) ทำวิวดีกว่าคลิปเดี่ยวเสมอ</li>
-  </ul>
+<section>
+<h2>ข้อสังเกต & คำแนะนำ (19 ก.ค. 2026)</h2>
+<div class="notes">
+<ul>
+<li><b>สัปดาห์เงียบทั้งวง</b> — ไม่มีโพสต์ IG ใหม่เลยทั้ง 4 คนใน 7 วัน และไม่มีคลิป TikTok ที่ทำวิวเกินหลักพัน โมเมนตัมจากรอบก่อน (FIN +68) หายไป ถ้าเป็นช่วงพัก/เตรียมงานควรมี teaser คั่น อย่าปล่อยฟีดว่าง</li>
+<li><b>AMP ดีสุดรอบนี้แบบเงียบๆ</b> — IG +19 ทั้งที่ไม่ได้โพสต์ใหม่ (แรงส่งจาก 3 โพสต์รอบก่อน) + likes TikTok +0.4K จากคลิปหมอนทองที่ยังทำงาน ควรรีบลงคลิปใหม่ตอนนี้ที่คนยังเข้าโปรไฟล์</li>
+<li><b>FRESHY น่าห่วงต่อเนื่อง</b> — TikTok −100 followers สองสัปดาห์ติด, IG ไม่มีโพสต์ใหม่ตั้งแต่ปลาย มิ.ย. ฐานแฟนใหญ่สุดในวงแต่กำลังไหลออก ควรกลับมาลงแนวคอมเมดี้/กินโชว์ที่เคยไวรัล</li>
+<li><b>FIN หมดรอบไวรัล</b> — TT −9, IG −1 หลังพุ่ง +68 สัปดาห์ก่อน เป็นเรื่องปกติหลังคลิปแมส แต่ต้องลงคลิปเต้นตามเทรนด์ใหม่ภายในสัปดาห์นี้เพื่อรักษาคนที่เพิ่งตาม</li>
+<li><b>HONGYING ทรงตัว</b> — likes +0.2K, ฐานแฟนอินโดฯ ยังแอคทีฟ แนะนำเดิม: คอนเทนต์ caption อังกฤษ/อินโดฯ ต่อยอดฐานต่างชาติ</li>
+<li><b>ภาพรวม</b> — วงต้องการ content calendar ชัดเจน อย่างน้อยคนละ 2–3 โพสต์/สัปดาห์ + คลิปกลุ่มเกาะเทรนด์ 1 คลิป เพราะข้อมูล 3 สัปดาห์ยืนยันว่าคลิปกลุ่ม (AAA, perses) ทำวิวดีกว่าคลิปเดี่ยวเสมอ</li>
+</ul>
 </div>
-
-<footer>QViNT Social Weekly · generated 2026-07-19 · data: IG + TikTok public pages</footer>
+</section>
 
 <script>
 new Chart(document.getElementById('chart'),{
-  type:'bar',
-  data:{
-    labels:['FRESHY','AMP','FIN','HONGYING'],
-    datasets:[
-      {label:'IG Followers',data:[6989,3517,2488,2895],backgroundColor:'#ff4d9d',borderRadius:6},
-      {label:'TikTok Followers',data:[81000,11100,2003,10900],backgroundColor:'#a855f7',borderRadius:6}
-    ]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    scales:{
-      y:{type:'logarithmic',grid:{color:'#2d1b45'},ticks:{color:'#9d8bb5'}},
-      x:{grid:{display:false},ticks:{color:'#f3e8ff',font:{weight:'bold'}}}
-    },
-    plugins:{legend:{labels:{color:'#f3e8ff'}}}
-  }
+type:'bar',
+data:{
+labels:['FRESHY','AMP','FIN','HONGYING'],
+datasets:[
+{label:'IG Followers',data:[6989,3517,2488,2895],backgroundColor:'#ff5fa2',borderRadius:6},
+{label:'TikTok Followers',data:[81000,11100,2003,10900],backgroundColor:'#a06bff',borderRadius:6}
+]
+},
+options:{
+responsive:true,
+scales:{
+y:{type:'logarithmic',grid:{color:'#241c38'},ticks:{color:'#9b8fb5'}},
+x:{grid:{display:false},ticks:{color:'#f2eefb'}}
+},
+plugins:{legend:{labels:{color:'#f2eefb'}}}
+}
 });
 </script>
 </body>
