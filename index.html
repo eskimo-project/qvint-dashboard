@@ -1,53 +1,44 @@
-<!doctype html>
-<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QViNT Social Dashboard</title>
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QViNT Social Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-body{margin:0;background:#0f0a1a;color:#f3e8ff;font-family:system-ui,sans-serif;padding:24px;max-width:1000px;margin:auto}
-h1{background:linear-gradient(90deg,#ff5fa2,#a855f7);-webkit-background-clip:text;color:transparent}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.card{background:#1c1330;border:1px solid #3b2763;border-radius:12px;padding:14px}
-.card b{font-size:24px;display:block;color:#ff7ab8}
-table{width:100%;border-collapse:collapse;margin:12px 0}th,td{padding:8px;border-bottom:1px solid #3b2763;text-align:right}th:first-child,td:first-child{text-align:left}
-.up{color:#4ade80}.down{color:#f87171}small{color:#b8a5d6}
+:root{--bg:#0f0a1a;--card:#1a1230;--tx:#f3eaff;--mu:#a99cc4;--pk:#ff4fa3;--pu:#9b5cff;--up:#4ade80;--dn:#f87171}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,"Noto Sans Thai",sans-serif;padding:20px;max-width:1000px;margin:auto}
+h1{background:linear-gradient(90deg,var(--pk),var(--pu));-webkit-background-clip:text;color:transparent;margin:0}
+.sub{color:var(--mu);font-size:14px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px}
+.card{background:var(--card);border-radius:14px;padding:16px;border:1px solid #2d2150}
+.k{font-size:28px;font-weight:700}.l{color:var(--mu);font-size:13px}
+.up{color:var(--up)}.dn{color:var(--dn)}.na{color:var(--mu)}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:8px 6px;text-align:right;border-bottom:1px solid #2d2150}th:first-child,td:first-child{text-align:left}
+th{color:var(--mu);font-weight:500}
+ul{margin:6px 0 0;padding-left:20px;line-height:1.7}h2{font-size:17px;margin:20px 0 10px}
+.wrap{overflow-x:auto}
 </style></head><body>
 <h1>QViNT Social Dashboard</h1>
-<small>อัปเดต 5 ต.ค. 2026 · เทียบ baseline 30 มิ.ย. 2026 (ไม่มีข้อมูลสัปดาห์ก่อนหน้า)</small>
-<div class="grid" style="margin-top:12px">
-<div class="card">IG followers รวม<b>17,546</b><span class="up">+1,734</span></div>
-<div class="card">TikTok followers รวม<b>105.5K</b><span class="down">-0.5K</span></div>
-<div class="card">TikTok likes รวม<b>3.42M</b><span class="up">+~0.1M</span></div>
-<div class="card">IG โพสต์รวม<b>388</b><span class="up">+42</span></div>
+<div class="sub">อัปเดตล่าสุด 12 ต.ค. 2026 · เทียบ baseline 30 มิ.ย. 2026 (ไม่มี history.json รอบก่อน) · IG ซ่อน like count ทุกบัญชี</div>
+<div class="kpis">
+<div class="card"><div class="l">IG followers รวมวง</div><div class="k">18,008</div><div class="up">+2,196 (+13.9%)</div></div>
+<div class="card"><div class="l">IG โพสต์รวม</div><div class="k">490</div><div class="up">+44</div></div>
+<div class="card"><div class="l">TikTok FRESHY followers</div><div class="k">80.7K</div><div class="dn">−0.5K</div></div>
+<div class="card"><div class="l">TikTok HONGYING followers</div><div class="k">11.2K</div><div class="up">+0.3K</div></div>
 </div>
-<div class="card" style="margin-top:12px"><canvas id="c" height="110"></canvas></div>
-<h2>Instagram</h2>
-<table><tr><th>สมาชิก</th><th>Followers</th><th>เปลี่ยน</th><th>โพสต์</th></tr>
-<tr><td>FRESHY</td><td>7,115</td><td class="up">+141</td><td>177 (+6)</td></tr>
-<tr><td>AMP</td><td>3,910</td><td class="up">+440</td><td>117 (+16)</td></tr>
-<tr><td>FIN</td><td>3,264</td><td class="up">+781</td><td>69 (+13)</td></tr>
-<tr><td>HONGYING</td><td>3,257</td><td class="up">+372</td><td>125 (+7)</td></tr></table>
-<small>ทุกบัญชีซ่อน like count — ดูไลก์ต่อโพสต์ไม่ได้</small>
-<h2>TikTok</h2>
-<table><tr><th>สมาชิก</th><th>Followers</th><th>เปลี่ยน</th><th>Likes</th><th>เปลี่ยน</th></tr>
-<tr><td>FRESHY</td><td>80.7K</td><td class="down">-0.5K</td><td>2.4M</td><td class="up">+0.1M</td></tr>
-<tr><td>AMP</td><td>11K</td><td class="down">-0.1K</td><td>437.5K</td><td class="up">+15.6K</td></tr>
-<tr><td>FIN</td><td>2,576</td><td class="up">+632</td><td>29.9K</td><td class="up">+3.9K</td></tr>
-<tr><td>HONGYING</td><td>11.2K</td><td class="up">+0.3K</td><td>550K</td><td class="up">+10.9K</td></tr></table>
-<h2>คลิป TikTok แมสสุด (views)</h2>
-<div class="grid">
-<div class="card">FRESHY<b>3.6M</b><small>ปักหมุด</small></div>
-<div class="card">HONGYING<b>1.3M</b><small>ไวรัลอินโดฯ</small></div>
-<div class="card">AMP<b>607.8K</b><small>สูงสุดที่ปักหมุด (baseline 718K ไม่ได้เช็กซ้ำ)</small></div>
-<div class="card">FIN<b>84.5K</b><small>+1.7K</small></div></div>
-<h2>ข้อสังเกต</h2>
-<ul>
-<li>FIN โตแรงสุดทั้ง IG (+781) และ TikTok (+632) — เล็กสุดแต่มาแรง</li>
-<li>FRESHY ยังนำทุกแพลตฟอร์ม แต่ TikTok followers ลดเล็กน้อย</li>
-<li>AMP IG โตดี (+440) แต่ TikTok นิ่ง/ลด</li>
-<li>HONGYING โตสม่ำเสมอทั้งสองแพลตฟอร์ม คลิป 1.3M ยังเป็นแมสสุด</li></ul>
-<script>
-new Chart(document.getElementById('c'),{type:'bar',data:{labels:['FRESHY','AMP','FIN','HONGYING'],datasets:[
-{label:'IG 30 มิ.ย.',data:[6974,3470,2483,2885],backgroundColor:'#7c3aed88'},
-{label:'IG 5 ต.ค.',data:[7115,3910,3264,3257],backgroundColor:'#ff5fa2'}]},
-options:{plugins:{legend:{labels:{color:'#f3e8ff'}}},scales:{x:{ticks:{color:'#f3e8ff'}},y:{ticks:{color:'#f3e8ff'}}}}});
-</script></body></html>
+<div class="card"><canvas id="c" height="120"></canvas></div>
+<h2>Instagram</h2><div class="card wrap"><table><tr><th>สมาชิก</th><th>Followers</th><th>เปลี่ยน</th><th>โพสต์</th><th>เปลี่ยน</th></tr>
+<tr><td>FRESHY</td><td>7,323</td><td class="up">+349 (+5.0%)</td><td>178</td><td class="up">+7</td></tr>
+<tr><td>AMP</td><td>3,919</td><td class="up">+449 (+12.9%)</td><td>117</td><td class="up">+16</td></tr>
+<tr><td>FIN</td><td>3,268</td><td class="up">+785 (+31.6%)</td><td>70</td><td class="up">+14</td></tr>
+<tr><td>HONGYING</td><td>3,498</td><td class="up">+613 (+21.2%)</td><td>125</td><td class="up">+7</td></tr></table></div>
+<h2>TikTok</h2><div class="card wrap"><table><tr><th>สมาชิก</th><th>Followers</th><th>เปลี่ยน</th><th>Likes</th><th>เปลี่ยน</th></tr>
+<tr><td>FRESHY</td><td>80.7K</td><td class="dn">−0.5K</td><td>2.4M</td><td class="up">+0.1M</td></tr>
+<tr><td>AMP</td><td class="na" colspan="4">เข้าไม่ได้รอบนี้ (TikTok error) — ล่าสุดที่รู้ 11.1K / 421.9K</td></tr>
+<tr><td>FIN</td><td class="na" colspan="4">เข้าไม่ได้รอบนี้ (TikTok error) — ล่าสุดที่รู้ 1,944 / 26K</td></tr>
+<tr><td>HONGYING</td><td>11.2K</td><td class="up">+0.3K</td><td>550.4K</td><td class="up">+11.3K</td></tr></table></div>
+<h2>คลิปแมสสุด TikTok</h2><div class="card"><span class="na">รอบนี้ยังเก็บไม่ได้ (หน้า video list ไม่โหลด) — ค่าล่าสุดที่รู้: FRESHY 3.6M views · HONGYING 1.3M (like rate 16.5%) · AMP 718K · FIN ~82.8K</span></div>
+<h2>ข้อสังเกต / คำแนะนำ</h2><div class="card"><ul>
+<li>FIN โตเร็วสุดบน IG (+31.6%) และโพสต์ถี่ขึ้น +14 — ควรรักษาจังหวะ + เกาะเทรนด์เต้น/เพลง</li>
+<li>HONGYING โตต่อเนื่อง ทั้ง IG (+21%) และ TikTok likes (+11.3K) — ดาวรุ่ง</li>
+<li>FRESHY ยังนำทุกแพลตฟอร์ม แต่ TikTok followers ลดเล็กน้อย — ควรเช็คความถี่คลิปล่าสุด</li>
+<li>AMP IG โต +12.9% โพสต์เพิ่ม 16 แต่ TikTok ยังไม่มีข้อมูลรอบนี้</li>
+<li>หมายเหตุ: ส่วนต่างเป็นช่วง ~15 สัปดาห์จาก baseline ไม่ใช่ 7 วัน</li></ul></div>
+<script>new Chart(document.getElementById('c'),{type:'bar',data:{labels:['FRESHY','AMP','FIN','HONGYING'],datasets:[{label:'30 มิ.ย.',data:[6974,3470,2483,2885],backgroundColor:'#9b5cff'},{label:'12 ต.ค.',data:[7323,3919,3268,3498],backgroundColor:'#ff4fa3'}]},options:{plugins:{legend:{labels:{color:'#f3eaff'}},title:{display:true,text:'IG followers',color:'#f3eaff'}},scales:{x:{ticks:{color:'#a99cc4'}},y:{ticks:{color:'#a99cc4'}}}}})</script>
+</body></html>
